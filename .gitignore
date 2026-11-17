@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+# written by the tools when you run them
+flash-dumps/*.log
+flash-dumps/regs-*
+flash-dumps/before-write-*
+flash-dumps/after-*
+flash-dumps/pex-flash-*-2*.bin
+!flash-dumps/pex-flash-x8x8-20261117-011057.bin
+!flash-dumps/pex-flash-x4-20261117-011830.bin
+tests/bad-checksum.bin
