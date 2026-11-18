@@ -64,6 +64,8 @@ Details:
 - [docs/hardware.md](docs/hardware.md): the board, its DIP switch, connectors and switch topology
 - [docs/reproduce.md](docs/reproduce.md): step by step for another board, plus recovery
 - [docs/sources.md](docs/sources.md): where every fact came from
+- [docs/mixed-widths.md](docs/mixed-widths.md): **untested** but theoretically possible: some pairs x16, others
+  x4 (for example four GPUs plus four NVMe drives)
 
 ## Files
 
@@ -75,8 +77,9 @@ Details:
 | `pex_flash_prog.py write-sbr` | Erases the first 4 KiB sector and writes an image at 0x400, with interlocks (below) | **yes** |
 | `pex_flash_prog.py program` | Writes an image into a completely blank chip (fallback boot only), no erase | **yes** |
 | `make_x16_sbr.py` | Builds `images/sbr-x16-A.bin` / `-B.bin` from the x8x8 image | no (offline) |
+| `make_mixed_sbr.py` | **Untested.** Builds a mixed x16/x4 image from x16-A ([docs/mixed-widths.md](docs/mixed-widths.md)) | no (offline) |
 | `sbr_info.py` | Decodes any SBR, or finds SBRs inside vendor firmware files | no (offline) |
-| `tests/sim_test.py` | Tests the write paths against a simulated SPI controller and flash chip (20 cases) | no |
+| `tests/sim_test.py` | Tests the write paths against a simulated SPI controller and flash chip (22 cases) | no |
 | `flash-dumps/` | This board's original x8x8 and x4 flash contents (1 MiB each) and the SBRs cut from them | |
 | `images/` | Our x16 images: A (used, working) and B (fallback variant) | |
 

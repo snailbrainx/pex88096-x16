@@ -20,6 +20,7 @@ IMG_X8 = os.path.join(DUMPS, "sbr-x8x8-0x400-0xF20.bin")
 STN_X4 = [0x02490000, 0x02490249, 0x02490249]
 STN_X8 = [0x0FFF0000, 0x0FFF0FFF, 0x0FFF0FFF]
 STN_X16 = [0, 0, 0]
+STN_MIXED = [0, 0, 0x02490000]      # pairs A-D x16, E four x4
 
 
 class FakeBar:
@@ -155,6 +156,19 @@ rc, out = run(["write-sbr", "--image", IMG_B], b)
 case("x16-B over x16-A (x16 boot)", rc == 0 and bytes(b.flash[:1 << 20]) == image_at_400(IMG_B), out)
 rc, out = run(["write-sbr", "--image", IMG_X4], b)
 case("restore x4 over x16-B gives back the exact x4 dump", rc == 0 and bytes(b.flash[:1 << 20]) == X4_DUMP, out)
+
+# 3b. the untested mixed example (A-D x16, E four x4) over x16-A, then x16-A back over it
+import make_mixed_sbr as M  # noqa: E402
+mixp = os.path.join(HERE, "mixed-example.bin")
+open(mixp, "wb").write(M.build(M.parse_layout("x16,x16,x16,x16,x4"))[1])
+b = FakeBar(image_at_400(IMG_A), stn=STN_X16)
+rc, out = run(["write-sbr", "--image", mixp], b)
+case("mixed example over x16-A (x16 boot)", rc == 0 and bytes(b.flash[:1 << 20]) == image_at_400(mixp), out)
+b.stn = STN_MIXED
+rc, out = run(["write-sbr", "--image", IMG_A], b)
+case("x16-A back over the mixed example (mixed boot)", rc == 0 and bytes(b.flash[:1 << 20]) == image_at_400(IMG_A)
+     and "stn5 x4,x4,x4,x4" in out, out)
+os.remove(mixp)
 
 # 4. fallback boot after a rejected image: blank chip, no erase needed
 b = FakeBar(b"\xff" * (1 << 20), stn=STN_X4)

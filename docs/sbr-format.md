@@ -148,4 +148,5 @@ flash 0x0f1c: 0000000e -> 000000ed     checksum byte
 
 - the meaning of `+084/+088`, the x4 build's extra writes, and most of the SoC block
 - codes other than 0/1/7 on this chip
+- whether stations with different widths (x16 next to x4) work together; see [mixed-widths.md](mixed-widths.md)
 - whether other boards' SoC settings would work on this one (we never tried; we kept the board's own)
